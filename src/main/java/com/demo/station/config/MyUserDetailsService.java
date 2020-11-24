@@ -50,7 +50,7 @@ public class MyUserDetailsService implements UserDetailsService {
                 String collect = roles.stream().map(Role::getRoleName).collect(Collectors.joining(","));
                 auths = AuthorityUtils.commaSeparatedStringToAuthorityList(collect);
             }
-            return new User(user.getUserName(),new BCryptPasswordEncoder().encode(user.getUserPassword()),auths);
+            return new User(user.getUserName(),user.getUserPassword(),auths);
         }
 
     }
