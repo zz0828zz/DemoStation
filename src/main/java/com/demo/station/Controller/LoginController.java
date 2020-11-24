@@ -14,7 +14,7 @@ import java.util.Objects;
  * @Author lipb
  **/
 @RestController
-@RequestMapping("user")
+@RequestMapping("login")
 public class LoginController {
     @Autowired
     private UserService userService;
@@ -30,9 +30,9 @@ public class LoginController {
         if (!Objects.equals("admin", username) || !Objects.equals("123456", requestUser.getUserPassword())) {
             String message = "账号密码错误";
             System.out.println("test");
-            return new Result(400);
+            return Result.fail(message);
         } else {
-            return new Result(200);
+            return Result.success("登陆成功");
         }
     }
 

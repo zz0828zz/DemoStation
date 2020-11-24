@@ -6,7 +6,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 新增、修改user实体类
+ * 用户返回实体类
  * @Author lipb
  **/
 @Data

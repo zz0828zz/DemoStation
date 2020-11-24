@@ -13,16 +13,16 @@ import java.io.Serializable;
  * @Author lipb
  **/
 @Data
-@TableName("user")
-@ApiModel("用户对象")
-public class User implements Serializable {
+@TableName("user_role")
+@ApiModel("用户角色对象")
+public class UserRole implements Serializable {
     @ApiModelProperty(value = "主键")
     @TableId(value = "id", type = IdType.AUTO)
    private Long id;
 
-    @ApiModelProperty(value = "用户账号",required = true)
-   private String userName;
+    @ApiModelProperty(value = "用户id",required = true)
+   private Long userId;
 
-    @ApiModelProperty(value = "用户密码",required = true)
-   private String userPassword;
+    @ApiModelProperty(value = "角色id",required = true)
+   private Long roleId;
 }
