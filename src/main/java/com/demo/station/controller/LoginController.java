@@ -1,4 +1,4 @@
-package com.demo.station.Controller;
+package com.demo.station.controller;
 
 import com.demo.station.Utils.Result;
 import com.demo.station.pojo.SysUser;
@@ -19,22 +19,13 @@ public class LoginController {
     @Autowired
     private SysUserService userService;
 
-    @CrossOrigin
-    @PostMapping(value = "/login")
-    @ResponseBody
-    public Result login(@RequestBody SysUser requestUser) {
-        // 对 html 标签进行转义，防止 XSS 攻击
-        String username = requestUser.getUserName();
-        username = HtmlUtils.htmlEscape(username);
 
-        if (!Objects.equals("admin", username) || !Objects.equals("123456", requestUser.getUserPassword())) {
-            String message = "账号密码错误";
-            System.out.println("test");
-            return Result.fail(message);
-        } else {
-            return Result.success("登陆成功");
-        }
-    }
+//    @CrossOrigin
+//    @PostMapping(value = "/login")
+//    @ResponseBody
+//    public Result login() {
+//
+//    }
 
     @GetMapping(value = "/userList")
     public void userList(){

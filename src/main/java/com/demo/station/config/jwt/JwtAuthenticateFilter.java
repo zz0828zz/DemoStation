@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.demo.station.mapper.SysRoleMapper;
 import com.demo.station.mapper.SysUserMapper;
 import com.demo.station.mapper.SysUserRoleMapper;
+import com.demo.station.pojo.SecurityConstants;
 import com.demo.station.pojo.SysRole;
 import com.demo.station.pojo.SysUser;
 import com.demo.station.pojo.SysUserRole;
@@ -50,7 +51,7 @@ public class JwtAuthenticateFilter extends UsernamePasswordAuthenticationFilter 
 
     public JwtAuthenticateFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
-        setFilterProcessesUrl("/token");  //获取token的接口
+       // setFilterProcessesUrl("/token");  //获取token的接口
     }
 
 
@@ -76,24 +77,15 @@ public class JwtAuthenticateFilter extends UsernamePasswordAuthenticationFilter 
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         User user = (User) authResult.getPrincipal();
 
-//        QueryWrapper<com.demo.station.pojo.User> queryWrapperUser = new QueryWrapper<>();
-//        queryWrapperUser.eq("user_name",user.getUsername());
-//        com.demo.station.pojo.User selectOne = userMapper.selectOne(queryWrapperUser);
-//        if (selectOne!=null){
-//            QueryWrapper<UserRole> queryWrapperUserRole = new QueryWrapper<>();
-//            queryWrapperUserRole.eq("user_id",selectOne.getId());
-//            List<UserRole> userRoleList = userRoleMapper.selectList(queryWrapperUserRole);
-//            List<Role> roles = roleMapper.selectBatchIds(userRoleList);
-//        }
         List<String> roles = user.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
         SecretKey key = Keys.hmacShaKeyFor(strKey.getBytes());
         String token = Jwts.builder()
-                .setHeaderParam("TYP", "JWT")
-                .setIssuer("")
-                .setAudience("")
-                .setExpiration(new Date(System.currentTimeMillis() + 10000000))   //失效时间
+                .setHeaderParam("TYP", SecurityConstants.TOKEN_TYPE)
+                .setIssuer(SecurityConstants.TOKEN_ISSUER)
+                .setAudience(SecurityConstants.TOKEN_AUDIENCE)
+                .setExpiration(new Date(System.currentTimeMillis() + 100000))   //失效时间
                 .setSubject(user.getUsername())
                 .setIssuedAt(new Date())
                 .claim("rol",roles)

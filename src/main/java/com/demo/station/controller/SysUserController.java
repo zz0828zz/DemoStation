@@ -1,4 +1,4 @@
-package com.demo.station.Controller;
+package com.demo.station.controller;
 
 import com.demo.station.Utils.Result;
 import com.demo.station.pojo.SysUser;
@@ -6,10 +6,6 @@ import com.demo.station.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.HtmlUtils;
-
-import java.util.List;
-import java.util.Objects;
 
 /**
  * @Author lipb
