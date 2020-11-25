@@ -8,6 +8,10 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * 拷贝对象的工具类
+ */
 @Data
 @Component
 public class CopyUtils {

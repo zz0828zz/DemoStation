@@ -16,3 +16,4 @@ spring:
 #    user:
 #      name: zsw
 #      password: zsw
+#      roles: admin

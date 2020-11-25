@@ -1,8 +1,8 @@
 package com.demo.station.Controller;
 
 import com.demo.station.Utils.Result;
-import com.demo.station.pojo.User;
-import com.demo.station.service.UserService;
+import com.demo.station.pojo.SysUser;
+import com.demo.station.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
@@ -17,12 +17,12 @@ import java.util.Objects;
 @RequestMapping("login")
 public class LoginController {
     @Autowired
-    private UserService userService;
+    private SysUserService userService;
 
     @CrossOrigin
     @PostMapping(value = "/login")
     @ResponseBody
-    public Result login(@RequestBody User requestUser) {
+    public Result login(@RequestBody SysUser requestUser) {
         // 对 html 标签进行转义，防止 XSS 攻击
         String username = requestUser.getUserName();
         username = HtmlUtils.htmlEscape(username);
@@ -38,7 +38,7 @@ public class LoginController {
 
     @GetMapping(value = "/userList")
     public void userList(){
-        List<User> list = userService.list();
+        List<SysUser> list = userService.list();
         for (int i = 0; i < list.size(); i++) {
             System.out.println(list.get(i));
         }

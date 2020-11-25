@@ -10,19 +10,20 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * @Author lipb
- **/
+ * @author : lipb
+ * @date : 2020-11-23 14:57
+ */
 @Data
-@TableName("user")
-@ApiModel("用户对象")
-public class User implements Serializable {
+@TableName("role")
+@ApiModel("角色对象")
+public class SysRole implements Serializable {
     @ApiModelProperty(value = "主键")
     @TableId(value = "id", type = IdType.AUTO)
-   private Long id;
+    private Long id;
 
-    @ApiModelProperty(value = "用户账号",required = true)
-   private String userName;
+    @ApiModelProperty(value = "角色名称",required = true)
+    private String roleName;
 
-    @ApiModelProperty(value = "用户密码",required = true)
-   private String userPassword;
+    @ApiModelProperty(value = "角色说明",required = true)
+    private String description;
 }

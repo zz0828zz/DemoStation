@@ -1,8 +1,8 @@
 package com.demo.station.Controller;
 
 import com.demo.station.Utils.Result;
-import com.demo.station.pojo.User;
-import com.demo.station.service.UserService;
+import com.demo.station.pojo.SysUser;
+import com.demo.station.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +16,12 @@ import java.util.Objects;
  **/
 @RestController
 @RequestMapping("user")
-public class UserController {
+public class SysUserController {
     @Autowired
-    private UserService userService;
+    private SysUserService userService;
 
     @PostMapping(value = "/saveUser")
-    public Result test1(@RequestBody User user){
+    public Result test1(@RequestBody SysUser user){
     if (user!=null){
         user.setUserPassword(new BCryptPasswordEncoder().encode(user.getUserPassword()));
         if (userService.save(user)) {

@@ -15,10 +15,8 @@ import java.io.Serializable;
 @Data
 @TableName("user_role")
 @ApiModel("用户角色对象")
-public class UserRole implements Serializable {
-    @ApiModelProperty(value = "主键")
-    @TableId(value = "id", type = IdType.AUTO)
-   private Long id;
+public class SysUserRole implements Serializable {
+
 
     @ApiModelProperty(value = "用户id",required = true)
    private Long userId;

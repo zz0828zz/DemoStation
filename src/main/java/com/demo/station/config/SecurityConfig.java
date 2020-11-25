@@ -1,5 +1,7 @@
 package com.demo.station.config;
 
+import com.demo.station.config.jwt.JwtAuthenticateFilter;
+import com.demo.station.config.jwt.JwtAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,8 +21,8 @@ import org.springframework.stereotype.Component;
  **/
 
 @Configuration
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@EnableWebSecurity
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
@@ -51,7 +53,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //.antMatchers("/user/test1").hasAuthority("admins")
                 .anyRequest().authenticated()
                 .and().httpBasic()
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilter(new JwtAuthenticateFilter(authenticationManager()))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager()))
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().csrf().disable();  //关闭csrf防护
 
 
