@@ -56,7 +56,7 @@
 //        AuthInfo authInfo = new AuthInfo();
 //        authInfo.setUserId(sysUser.getId());
 //        authInfo.setAccessToken(SecurityConstants.TOKEN_PREFIX+token);
-//
+//        Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
 //        return authInfo;
 //    }
 //
