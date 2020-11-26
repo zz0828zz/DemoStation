@@ -1,4 +1,4 @@
-package com.demo.station.Utils;
+package com.demo.station.utils;
 
 /**
  * @author : lipb

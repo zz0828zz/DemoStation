@@ -1,6 +1,7 @@
-package com.demo.station.Utils;
+package com.demo.station.utils;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
@@ -42,7 +43,7 @@ public class CopyUtils {
             list.add(copyPojo(obj, clazz));
 
         }
-		source.setRecords(list);
+        source.setRecords(list);
 
 
         return source;
@@ -55,7 +56,7 @@ public class CopyUtils {
             Object obj = null;
             try {
                 obj = clazz.newInstance();
-                if(null != source) {
+                if (null != source) {
                     BeanUtils.copyProperties(source, obj);
                 }
                 list2.add(obj);
@@ -68,7 +69,21 @@ public class CopyUtils {
         return list2;
     }
 
+    public static PageResult copyPage(Page source, Class clazz) {
 
+        PageResult pageResult = new PageResult();
+        pageResult.setCount(source.getTotal());
+
+        List list = new ArrayList<>();
+        for (Object obj : source.getRecords()) {
+            list.add(copyPojo(obj, clazz));
+
+        }
+        pageResult.setData(list);
+
+
+        return pageResult;
+    }
 
 
 }

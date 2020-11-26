@@ -1,7 +1,7 @@
 package com.demo.station.config.jwt;
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.demo.station.pojo.SecurityConstants;
+import com.demo.station.utils.SecurityConstants;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.log4j.Log4j2;

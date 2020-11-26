@@ -1,4 +1,4 @@
-package com.demo.station.pojo;
+package com.demo.station.utils;
 
 /**
  * @author : lipb

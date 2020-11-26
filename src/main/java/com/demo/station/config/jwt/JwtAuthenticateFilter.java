@@ -4,10 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.demo.station.mapper.SysRoleMapper;
 import com.demo.station.mapper.SysUserMapper;
 import com.demo.station.mapper.SysUserRoleMapper;
-import com.demo.station.pojo.SecurityConstants;
 import com.demo.station.pojo.SysRole;
 import com.demo.station.pojo.SysUser;
 import com.demo.station.pojo.SysUserRole;
+import com.demo.station.utils.SecurityConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -51,7 +51,7 @@ public class JwtAuthenticateFilter extends UsernamePasswordAuthenticationFilter 
 
     public JwtAuthenticateFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
-       // setFilterProcessesUrl("/token");  //获取token的接口
+        setFilterProcessesUrl("/token");  //获取token的接口
     }
 
 
