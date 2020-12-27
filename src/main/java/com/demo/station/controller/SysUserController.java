@@ -1,6 +1,9 @@
 package com.demo.station.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.demo.station.config.UserUtils;
+import com.demo.station.model.vo.PageInfo;
 import com.demo.station.pojo.SysUserRole;
 import com.demo.station.service.SysRoleService;
 import com.demo.station.service.SysUserRoleService;
@@ -10,8 +13,6 @@ import com.demo.station.utils.Result;
 import com.demo.station.model.dto.SysUserDto;
 import com.demo.station.pojo.SysUser;
 import com.demo.station.service.SysUserService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -37,14 +38,21 @@ public class SysUserController {
     @Autowired
     private SysUserRoleService sysUserRoleService;
 
+    @GetMapping(value = "/getUser")
+    @ApiOperation("获取当前登录用户")
+    public Result getUser(){
+        String s = UserUtils.getUser();
+        QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_name",s);
+        SysUser sysUser = userService.getOne(queryWrapper);
+        return Result.data(sysUser);
+    }
+
     @GetMapping(value = "/getUserPage")
     @ApiOperation("获取所有用户，分页")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "current", value = "当前页",required = true),
-            @ApiImplicitParam(name = "size", value = "每页数量",required = true)
-    })
-    public PageResult getUserPage(Integer current , Integer size){
-        Page<SysUser> page = new Page<>(current, size);  //参数一是当前页，参数二是每页个数
+
+    public PageResult getUserPage(@RequestBody PageInfo pageInfo){
+        Page<SysUser> page = new Page<>(pageInfo.getCurrent(), pageInfo.getSize());  //参数一是当前页，参数二是每页个数
 
         userService.page(page,null);
 
@@ -108,7 +116,7 @@ public class SysUserController {
     @PostMapping(value = "/addRoleByUser")
     @ApiOperation("给用户添加角色")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "用户id",required = true),
+            @ApiImplicitParam(name = "userId", value = "用户id",required = true),
             @ApiImplicitParam(name = "roleIds", value = "角色id集合",required = true)
     })
 

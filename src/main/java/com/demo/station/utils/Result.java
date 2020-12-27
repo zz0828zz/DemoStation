@@ -32,28 +32,28 @@ public class Result<T> implements Serializable {
             value = "返回消息",
             required = true
     )
-    private String msg;
+    private String message;
 
     private Result(IResultCode resultCode) {
         this(resultCode, null, resultCode.getMessage());
     }
 
-    private Result(IResultCode resultCode, String msg) {
-        this(resultCode, null, msg);
+    private Result(IResultCode resultCode, String message) {
+        this(resultCode, null, message);
     }
 
     private Result(IResultCode resultCode, T data) {
         this(resultCode, data, resultCode.getMessage());
     }
 
-    private Result(IResultCode resultCode, T data, String msg) {
-        this(resultCode.getCode(), data, msg);
+    private Result(IResultCode resultCode, T data, String message) {
+        this(resultCode.getCode(), data, message);
     }
 
-    private Result(int code, T data, String msg) {
+    private Result(int code, T data, String message) {
         this.code = code;
         this.data = data;
-        this.msg = msg;
+        this.message = message;
         this.success = ResultCode.SUCCESS.code == code;
     }
 
@@ -71,40 +71,40 @@ public class Result<T> implements Serializable {
         return data(data, "操作成功");
     }
 
-    public static <T> Result<T> data(T data, String msg) {
-        return data(200, data, msg);
+    public static <T> Result<T> data(T data, String message) {
+        return data(200, data, message);
     }
 
-    public static <T> Result<T> data(int code, T data, String msg) {
-        return new Result(code, data, data == null ? "暂无承载数据" : msg);
+    public static <T> Result<T> data(int code, T data, String message) {
+        return new Result(code, data, data == null ? "暂无承载数据" : message);
     }
 
-    public static <T> Result<T> success(String msg) {
-        return new Result(ResultCode.SUCCESS, msg);
+    public static <T> Result<T> success(String message) {
+        return new Result(ResultCode.SUCCESS, message);
     }
 
     public static <T> Result<T> success(IResultCode resultCode) {
         return new Result(resultCode);
     }
 
-    public static <T> Result<T> success(IResultCode resultCode, String msg) {
-        return new Result(resultCode, msg);
+    public static <T> Result<T> success(IResultCode resultCode, String message) {
+        return new Result(resultCode, message);
     }
 
-    public static <T> Result<T> fail(String msg) {
-        return new Result(ResultCode.FAILURE, msg);
+    public static <T> Result<T> fail(String message) {
+        return new Result(ResultCode.FAILURE, message);
     }
 
-    public static <T> Result<T> fail(int code, String msg) {
-        return new Result(code, (Object)null, msg);
+    public static <T> Result<T> fail(int code, String message) {
+        return new Result(code, (Object)null, message);
     }
 
     public static <T> Result<T> fail(IResultCode resultCode) {
         return new Result(resultCode);
     }
 
-    public static <T> Result<T> fail(IResultCode resultCode, String msg) {
-        return new Result(resultCode, msg);
+    public static <T> Result<T> fail(IResultCode resultCode, String message) {
+        return new Result(resultCode, message);
     }
 
     public static <T> Result<T> status(boolean flag) {
@@ -123,8 +123,8 @@ public class Result<T> implements Serializable {
         return this.data;
     }
 
-    public String getMsg() {
-        return this.msg;
+    public String getMessage() {
+        return this.message;
     }
 
     public void setCode(final int code) {
@@ -139,12 +139,12 @@ public class Result<T> implements Serializable {
         this.data = data;
     }
 
-    public void setMsg(final String msg) {
-        this.msg = msg;
+    public void setMessage(final String message) {
+        this.message = message;
     }
 
     public String toString() {
-        return "R(code=" + this.getCode() + ", success=" + this.isSuccess() + ", data=" + this.getData() + ", msg=" + this.getMsg() + ")";
+        return "R(code=" + this.getCode() + ", success=" + this.isSuccess() + ", data=" + this.getData() + ", message=" + this.getMessage() + ")";
     }
 
     public Result() {

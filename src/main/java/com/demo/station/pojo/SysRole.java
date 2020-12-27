@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @date : 2020-11-23 14:57
  */
 @Data
-@TableName("role")
+@TableName("sys_role")
 @ApiModel("角色对象")
 public class SysRole implements Serializable {
     @ApiModelProperty(value = "主键")

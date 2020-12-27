@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @Author lipb
  **/
 @Data
-@TableName("user_role")
+@TableName("sys_user_role")
 @ApiModel("用户角色对象")
 public class SysUserRole implements Serializable {
 

@@ -45,10 +45,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        .defaultSuccessUrl("/api/user/test")  //当登录成功之后，跳转路径
 //        .permitAll()
 //                .and()
+                //授权
                 .authorizeRequests()
+                //放行
                 .antMatchers("/login/**","/swagger-ui.html/**").permitAll()  //设置哪些路径不需要认证   ps：yml中配置的路径不需要写里面
                 //当前登录用户，只有具有admins权限才能访问这个路径  hasAuthority（）指定一个权限。.hasAnyAuthority()指定多个权限
                 //.antMatchers("/user/test1").hasAuthority("admins")
+                //所有的请求都必须认证
                 .anyRequest().authenticated()
                 .and().httpBasic()
                 .and()

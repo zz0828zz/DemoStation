@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @Author lipb
  **/
 @Data
-@TableName("user")
+@TableName("sys_user")
 @ApiModel("用户对象")
 public class SysUser implements Serializable {
     @ApiModelProperty(value = "主键")

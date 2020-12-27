@@ -26,6 +26,8 @@ public class PageResult<T> implements Serializable {
 
     private int code= ResultCode.SUCCESS.code;
 
+    private String massage = ResultCode.SUCCESS.message;
+
     /**
      * 当前页结果集
      */
