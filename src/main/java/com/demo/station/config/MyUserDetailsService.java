@@ -7,6 +7,7 @@ import com.demo.station.mapper.SysUserRoleMapper;
 import com.demo.station.pojo.SysRole;
 import com.demo.station.pojo.SysUser;
 import com.demo.station.pojo.SysUserRole;
+import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -39,7 +40,8 @@ public class MyUserDetailsService implements UserDetailsService {
         SysUser user = userMapper.selectOne(queryWrapperUser);
         //判断
         if (user == null){  //数据库中没有用户名，认证失败
-            throw new UsernameNotFoundException("用户名"+userName+"不存在！");
+            throw new BusinessException("用户名"+userName+"不存在！");
+            // throw new  UsernameNotFoundException("用户名"+userName+"不存在！");
         }else{
             List<GrantedAuthority> auths = new ArrayList<>();
             QueryWrapper<SysUserRole> queryWrapperUserRole = new QueryWrapper<>();

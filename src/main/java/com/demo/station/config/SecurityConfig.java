@@ -3,6 +3,8 @@ package com.demo.station.config;
 //import com.demo.station.config.jwt.JwtAuthenticateFilter;
 import com.demo.station.config.jwt.JwtAuthenticateFilter;
 import com.demo.station.config.jwt.JwtAuthorizationFilter;
+//import com.demo.station.config.security.AjaxAuthenticationFailureHandler;
+//import com.demo.station.config.security.JwtAccessDeniedHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +26,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
+
+//    @Autowired
+//    private AjaxAuthenticationFailureHandler ajaxAuthenticationFailureHandler;  //  登录失败返回的 JSON 格式数据给前端（否则为 html）
+//    @Autowired
+//    private JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -57,6 +64,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilter(new JwtAuthenticateFilter(authenticationManager()))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager()))
+//                .exceptionHandling()
+//                .authenticationEntryPoint(ajaxAuthenticationFailureHandler)
+//                .accessDeniedHandler(jwtAccessDeniedHandler)
+//                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().csrf().disable();  //关闭csrf防护
 

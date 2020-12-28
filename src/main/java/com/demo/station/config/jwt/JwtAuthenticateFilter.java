@@ -7,12 +7,16 @@ import com.demo.station.mapper.SysUserRoleMapper;
 import com.demo.station.pojo.SysRole;
 import com.demo.station.pojo.SysUser;
 import com.demo.station.pojo.SysUserRole;
+import com.demo.station.utils.Result;
 import com.demo.station.utils.SecurityConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.javafx.collections.MappingChange;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import net.sf.json.JSON;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,6 +25,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import springfox.documentation.spring.web.json.Json;
 
 import javax.crypto.SecretKey;
 import javax.servlet.FilterChain;
@@ -29,7 +34,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -90,8 +97,18 @@ public class JwtAuthenticateFilter extends UsernamePasswordAuthenticationFilter 
                 .setIssuedAt(new Date())
                 .claim("rol",roles)
                 .signWith(key).compact();
-
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("application/json; charset=utf-8");
         response.setHeader("Authorization","Bearer "+token);
+
+
+        Map<String,String> map = new HashMap();
+        map.put("tokenType","Bearer");
+        map.put("token",token);
+        Result<Map<String, String>> data = Result.data(map);
+
+        JSONObject jsonObject = JSONObject.fromObject(data);
+        response.getWriter().write(jsonObject.toString());
 
     }
 
