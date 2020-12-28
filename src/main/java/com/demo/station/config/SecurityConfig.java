@@ -5,6 +5,7 @@ import com.demo.station.config.jwt.JwtAuthenticateFilter;
 import com.demo.station.config.jwt.JwtAuthorizationFilter;
 //import com.demo.station.config.security.AjaxAuthenticationFailureHandler;
 //import com.demo.station.config.security.JwtAccessDeniedHandler;
+import com.demo.station.config.security.AjaxAuthenticationFailureHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,8 +28,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
-//    @Autowired
-//    private AjaxAuthenticationFailureHandler ajaxAuthenticationFailureHandler;  //  登录失败返回的 JSON 格式数据给前端（否则为 html）
+    @Autowired
+    private AjaxAuthenticationFailureHandler ajaxAuthenticationFailureHandler;  //  登录失败返回的 JSON 格式数据给前端（否则为 html）
 //    @Autowired
 //    private JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
@@ -64,10 +65,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilter(new JwtAuthenticateFilter(authenticationManager()))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager()))
-//                .exceptionHandling()
-//                .authenticationEntryPoint(ajaxAuthenticationFailureHandler)
+                .exceptionHandling()
+                .authenticationEntryPoint(ajaxAuthenticationFailureHandler)
 //                .accessDeniedHandler(jwtAccessDeniedHandler)
-//                .and()
+                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().csrf().disable();  //关闭csrf防护
 
@@ -87,7 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/swagger-resources/configuration/ui",//用来获取支持的动作
                 "/swagger-resources",//用来获取api-docs的URI
                 "/swagger-resources/configuration/security",//安全选项
-                "/swagger-ui.html", "/doc.html");
+                "/swagger-ui.html", "/doc.html","/webjars/**");
     }
 
 }

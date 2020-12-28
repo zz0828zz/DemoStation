@@ -1,13 +1,13 @@
 package com.demo.station.config;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.demo.station.config.GoalException.BusinessException;
 import com.demo.station.mapper.SysRoleMapper;
 import com.demo.station.mapper.SysUserMapper;
 import com.demo.station.mapper.SysUserRoleMapper;
 import com.demo.station.pojo.SysRole;
 import com.demo.station.pojo.SysUser;
 import com.demo.station.pojo.SysUserRole;
-import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -40,8 +39,7 @@ public class MyUserDetailsService implements UserDetailsService {
         SysUser user = userMapper.selectOne(queryWrapperUser);
         //判断
         if (user == null){  //数据库中没有用户名，认证失败
-            throw new BusinessException("用户名"+userName+"不存在！");
-            // throw new  UsernameNotFoundException("用户名"+userName+"不存在！");
+            throw new  UsernameNotFoundException("用户名"+userName+"不存在！");
         }else{
             List<GrantedAuthority> auths = new ArrayList<>();
             QueryWrapper<SysUserRole> queryWrapperUserRole = new QueryWrapper<>();

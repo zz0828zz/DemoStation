@@ -1,8 +1,8 @@
-package com.demo.station.config;
+package com.demo.station.config.GoalException;
 
 import com.demo.station.utils.Result;
-import com.demo.station.utils.ResultCode;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,7 +24,5 @@ public class ExceptionHandlerAdvice {
         e.printStackTrace();
         return result;
     }
-
-
 
 }

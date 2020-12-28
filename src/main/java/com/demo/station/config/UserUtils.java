@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 /**
+ * 获取但当前登录用户
  * @Author lipb
  **/
 @Component

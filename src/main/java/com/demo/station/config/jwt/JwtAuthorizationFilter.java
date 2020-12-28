@@ -1,6 +1,9 @@
 package com.demo.station.config.jwt;
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.demo.station.config.GoalException.BusinessException;
+import com.demo.station.utils.Result;
+import com.demo.station.utils.ResultCode;
 import com.demo.station.utils.SecurityConstants;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SignatureException;
@@ -70,18 +73,24 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             } catch (ExpiredJwtException e) {
                 //请求过期的JWT
                 log.warn("Request to parse expired JWT : {} failed : {}", token, e.getMessage());
+                throw new BusinessException("token过期", ResultCode.UN_AUTHORIZED.getCode());
+
             } catch (UnsupportedJwtException e){
                 //请求解析不支持的JWT
                 log.warn("Request to parse unsupported JWT : {} failed : {}", token, e.getMessage());
+                throw new BusinessException("请求解析不支持的JWT", ResultCode.UN_AUTHORIZED.getCode());
             } catch (MalformedJwtException e){
                 //请求解析无效的JWT
                 log.warn("Request to parse invalid JWT : {} failed : {}", token, e.getMessage());
+                throw new BusinessException("请求解析无效的JWT", ResultCode.UN_AUTHORIZED.getCode());
             } catch (SignatureException e){
                 //请求解析带有无效签名的JWT
                 log.warn("Request to parse JWT with invalid signature : {} failed : {}", token, e.getMessage());
+                throw new BusinessException("请求解析带有无效签名的JWT", ResultCode.UN_AUTHORIZED.getCode());
             } catch (IllegalArgumentException e){
                 //请求解析空或JWT为空
                 log.warn("Request to parse empty or null JWT : {} failed : {}", token, e.getMessage());
+                throw new BusinessException("请求解析空或JWT为空", ResultCode.UN_AUTHORIZED.getCode());
             }
 
         }

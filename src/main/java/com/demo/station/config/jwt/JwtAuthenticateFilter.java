@@ -71,7 +71,13 @@ public class JwtAuthenticateFilter extends UsernamePasswordAuthenticationFilter 
 //        String userName = request.getParameter("userName");
 //        String userPassword = request.getParameter("userPassword");
         SysUser sysUser = paraData(request);
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(sysUser.getUserName(),sysUser.getUserPassword());
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =null;
+        try{
+            usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(sysUser.getUserName(),sysUser.getUserPassword());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+       //UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(sysUser.getUserName(),sysUser.getUserPassword());
        return this.authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
 
@@ -92,11 +98,12 @@ public class JwtAuthenticateFilter extends UsernamePasswordAuthenticationFilter 
                 .setHeaderParam("TYP", SecurityConstants.TOKEN_TYPE)
                 .setIssuer(SecurityConstants.TOKEN_ISSUER)
                 .setAudience(SecurityConstants.TOKEN_AUDIENCE)
-                .setExpiration(new Date(System.currentTimeMillis() + 100000))   //失效时间
                 .setSubject(user.getUsername())
+                .setExpiration(new Date(System.currentTimeMillis() + 3000L * 1000L))   //失效时间
                 .setIssuedAt(new Date())
                 .claim("rol",roles)
-                .signWith(key).compact();
+                .signWith(key)
+                .compact();
         response.setCharacterEncoding("utf-8");
         response.setContentType("application/json; charset=utf-8");
         response.setHeader("Authorization","Bearer "+token);

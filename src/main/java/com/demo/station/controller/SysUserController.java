@@ -2,6 +2,7 @@ package com.demo.station.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.demo.station.config.GoalException.BusinessException;
 import com.demo.station.config.UserUtils;
 import com.demo.station.model.vo.PageInfo;
 import com.demo.station.pojo.SysUserRole;
@@ -41,6 +42,7 @@ public class SysUserController {
     @GetMapping(value = "/getUser")
     @ApiOperation("获取当前登录用户")
     public Result getUser(){
+
         String s = UserUtils.getUser();
         QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_name",s);

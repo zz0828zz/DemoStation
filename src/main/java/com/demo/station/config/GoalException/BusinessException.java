@@ -1,4 +1,4 @@
-package com.demo.station.config;
+package com.demo.station.config.GoalException;
 
 import com.demo.station.utils.ResultCode;
 import lombok.extern.slf4j.Slf4j;
