@@ -18,11 +18,21 @@ import java.io.Serializable;
 public class SysUser implements Serializable {
     @ApiModelProperty(value = "主键")
     @TableId(value = "id", type = IdType.AUTO)
-   private Long id;
+    private Long id;
 
-    @ApiModelProperty(value = "用户账号",required = true)
-   private String userName;
+    @ApiModelProperty(value = "用户账号", required = true)
+    private String userName;
 
-    @ApiModelProperty(value = "用户密码",required = true)
-   private String userPassword;
+    @ApiModelProperty(value = "用户密码", required = true)
+    private String userPassword;
+
+    @ApiModelProperty(value = "用户手机号")
+    private String phone;
+
+    @ApiModelProperty(value = "用户qq")
+    private Long qq;
+
+    @ApiModelProperty(value = "用户手机号")
+    private String agentName;
+
 }

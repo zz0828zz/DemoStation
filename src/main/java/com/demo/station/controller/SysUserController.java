@@ -1,25 +1,26 @@
 package com.demo.station.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.demo.station.config.GoalException.BusinessException;
-import com.demo.station.config.UserUtils;
-import com.demo.station.model.vo.PageInfo;
+import com.demo.station.config.jwt.UserUtils;
+import com.demo.station.model.vo.SaveSysUserVO;
+import com.demo.station.model.vo.SelectSysUserPage;
+import com.demo.station.model.vo.UpdateSysUserVO;
+import com.demo.station.pojo.SysRole;
 import com.demo.station.pojo.SysUserRole;
 import com.demo.station.service.SysRoleService;
 import com.demo.station.service.SysUserRoleService;
 import com.demo.station.utils.CopyUtils;
-import com.demo.station.utils.PageResult;
 import com.demo.station.utils.Result;
 import com.demo.station.model.dto.SysUserDto;
 import com.demo.station.pojo.SysUser;
 import com.demo.station.service.SysUserService;
+import com.demo.station.utils.ResultCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -40,31 +41,54 @@ public class SysUserController {
     private SysUserRoleService sysUserRoleService;
 
     @GetMapping(value = "/getUser")
-    @ApiOperation("获取当前登录用户")
-    public Result getUser(){
+    @ApiOperation("获取当前登录用户信息")
+    public Result<SysUserDto> getUser() {
 
         String s = UserUtils.getUser();
         QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_name",s);
+        queryWrapper.eq("user_name", s);
         SysUser sysUser = userService.getOne(queryWrapper);
-        return Result.data(sysUser);
+        SysUserDto sysUserDto = null;
+        if (sysUser != null) {
+            sysUserDto = new SysUserDto();
+            sysUserDto.setUserId(sysUser.getId());
+            sysUserDto.setUserName(sysUser.getUserName());
+            List<String> roles = new ArrayList<>();
+            //查询用户角色
+            QueryWrapper<SysUserRole> sysUserRoleQuery = new QueryWrapper<>();
+            sysUserRoleQuery.eq("user_id", sysUser.getId());
+            List<SysUserRole> sysUserRoleList = sysUserRoleService.list(sysUserRoleQuery);
+            if (!CollectionUtils.isEmpty(sysUserRoleList)) {
+                for (SysUserRole sysUserRole : sysUserRoleList) {
+                    SysRole sysRole = sysRoleService.getById(sysUserRole.getRoleId());
+                    roles.add(sysRole.getRoleName());
+                }
+                sysUserDto.setRoles(roles);
+                return Result.data(sysUserDto);
+            } else {
+                return Result.fail("该用户缺少角色");
+            }
+
+        } else {
+            return Result.fail(ResultCode.UN_AUTHORIZED.getCode(), "未查到用户信息！");
+        }
+
     }
 
-    @GetMapping(value = "/getUserPage")
+
+    @GetMapping(value = "/getSysUserInfoDto")
     @ApiOperation("获取所有用户，分页")
-
-    public PageResult getUserPage(@RequestBody PageInfo pageInfo){
-        Page<SysUser> page = new Page<>(pageInfo.getCurrent(), pageInfo.getSize());  //参数一是当前页，参数二是每页个数
-
-        userService.page(page,null);
-
-        return CopyUtils.copyPage(page, SysUserDto.class);
+    public Result getSysUserInfoDto(@RequestBody SelectSysUserPage page) {
+        page.setFirstIndex((page.getCurrent()-1)*page.getSize());
+        String sysUserName = UserUtils.getUser(); //获取当前用户账号
+        page.setSysUserName(sysUserName);
+        return Result.data(userService.getSysUserInfoDto(page));
     }
 
     @GetMapping(value = "/getUserById")
     @ApiOperation("根据用户id获取用户信息")
-    @ApiImplicitParam(name = "id", value = "用户id",required = true)
-    public Result getUserById(Integer id){
+    @ApiImplicitParam(name = "id", value = "用户id", required = true)
+    public Result getUserById(Integer id) {
         SysUser user = userService.getById(id);
         SysUserDto userDto = CopyUtils.copyPojo(user, SysUserDto.class);
         return Result.data(userDto);
@@ -72,77 +96,42 @@ public class SysUserController {
 
     @PostMapping(value = "/saveUser")
     @ApiOperation("新增用户")
-    public Result saveUser(@RequestBody SysUser user) {
-        if (user != null) {
-            user.setUserPassword(new BCryptPasswordEncoder().encode(user.getUserPassword()));
-            if (userService.save(user)) {
-                return Result.success("新增成功");
-            } else {
-                return Result.fail("新增失败");
-            }
-
+    public Result saveUser(@RequestBody SaveSysUserVO sysUserVO) {
+        String sysUserName = UserUtils.getUser(); //获取当前用户账号
+        sysUserVO.setAgentName(sysUserName);
+        if (userService.saveUser(sysUserVO)) {
+            return Result.success("新增成功");
         } else {
-            return Result.fail("用户为空！");
+            return Result.fail("新增失败");
         }
+
     }
 
     @PostMapping(value = "/updateUser")
     @ApiOperation("更新用户")
-    public Result updateUser(@RequestBody SysUser user) {
-        if (user != null) {
-            if (user.getUserPassword()!=null){
-                user.setUserPassword(new BCryptPasswordEncoder().encode(user.getUserPassword()));
-            }
-            if (userService.save(user)) {
-                return Result.success("更新成功");
-            } else {
-                return Result.fail("更新失败");
-            }
+    public Result updateUser(@RequestBody UpdateSysUserVO sysUserVO) {
+
+        if (userService.updateUser(sysUserVO)) {
+            return Result.success("更新成功");
         } else {
-            return Result.fail("用户为空！");
+            return Result.fail("更新失败");
         }
     }
 
 
     @PostMapping(value = "/delUser")
     @ApiOperation("根据用户id删除用户")
-    @ApiImplicitParam(name = "id", value = "用户id",required = true)
-    public Result delUser(Integer id){
+    @ApiImplicitParam(name = "id", value = "用户id", required = true)
+    public Result delUser(Long id) {
         if (userService.removeById(id)) {
+            QueryWrapper<SysUserRole> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("user_id",id);
+            sysUserRoleService.remove(queryWrapper);
             return Result.success("删除成功");
         } else {
             return Result.fail("删除失败");
         }
     }
 
-    @PostMapping(value = "/addRoleByUser")
-    @ApiOperation("给用户添加角色")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户id",required = true),
-            @ApiImplicitParam(name = "roleIds", value = "角色id集合",required = true)
-    })
-
-    public Result addRoleByUser(Long userId,String roleIds){
-        String[] roleIdArr = roleIds.split(",");
-        if (roleIdArr != null && roleIdArr.length > 0) {
-            List<SysUserRole> list = new ArrayList<>();
-            SysUserRole sysUserRole;
-            for (String roleId : roleIdArr) {
-                sysUserRole = new SysUserRole();
-                sysUserRole.setUserId(userId);
-                sysUserRole.setRoleId(Long.getLong(roleId));
-                list.add(sysUserRole);
-            }
-            if (sysUserRoleService.saveBatch(list)) {
-                return Result.success("添加成功");
-            }else {
-                return Result.fail("添加失败");
-            }
-        } else {
-            return Result.fail("请选择角色");
-        }
-
-
-    }
 
 }

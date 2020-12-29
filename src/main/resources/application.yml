@@ -16,8 +16,5 @@ spring:
     username: root
     password: zsw0828zsw
 
-#  security:
-#    user:
-#      name: zsw
-#      password: zsw
-#      roles: admin
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*Mapper.xml

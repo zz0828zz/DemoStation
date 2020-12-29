@@ -1,4 +1,4 @@
-package com.demo.station.config;
+package com.demo.station.config.jwt;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.demo.station.pojo.SysUser;

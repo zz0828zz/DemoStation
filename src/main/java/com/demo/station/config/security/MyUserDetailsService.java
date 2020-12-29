@@ -1,4 +1,4 @@
-package com.demo.station.config;
+package com.demo.station.config.security;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.demo.station.config.GoalException.BusinessException;

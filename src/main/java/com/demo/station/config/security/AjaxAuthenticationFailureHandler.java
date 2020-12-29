@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
+ * 自定义security错误信息
  * @author : lipb
  * @date : 2020-12-28 10:49
  */

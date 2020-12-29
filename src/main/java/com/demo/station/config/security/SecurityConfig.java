@@ -1,4 +1,4 @@
-package com.demo.station.config;
+package com.demo.station.config.security;
 
 //import com.demo.station.config.jwt.JwtAuthenticateFilter;
 import com.demo.station.config.jwt.JwtAuthenticateFilter;
