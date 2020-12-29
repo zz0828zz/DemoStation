@@ -24,7 +24,7 @@ public class SaveSysUserVO {
     @ApiModelProperty(value = "用户qq")
     private Long qq;
 
-    @ApiModelProperty(value = "用户手机号")
+    @ApiModelProperty(value = "代理人账号")
     private String agentName;
 
     @ApiModelProperty(value = "用户角色id 1：admin(管理员)  2：stair(一级代理)  3：second（二级代理）  4：user（普通用户） 传参1234",required = true)
