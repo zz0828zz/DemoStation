@@ -76,7 +76,7 @@ public class SysUserController {
     }
 
 
-    @GetMapping(value = "/getSysUserInfoDto")
+    @PostMapping(value = "/getSysUserInfoDto")
     @ApiOperation("获取所有用户，分页")
     public Result getSysUserInfoDto(@RequestBody SelectSysUserPage page) {
         page.setFirstIndex((page.getCurrent()-1)*page.getSize());

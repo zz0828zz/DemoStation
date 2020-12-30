@@ -56,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //授权
                 .authorizeRequests()
                 //放行
-                .antMatchers("/login/**","/swagger-ui.html/**").permitAll()  //设置哪些路径不需要认证   ps：yml中配置的路径不需要写里面
+                .antMatchers("/swagger-ui.html/**","/uploadFileServer/**").permitAll()  //设置哪些路径不需要认证   ps：yml中配置的路径不需要写里面
                 //当前登录用户，只有具有admins权限才能访问这个路径  hasAuthority（）指定一个权限。.hasAnyAuthority()指定多个权限
                 //.antMatchers("/user/test1").hasAuthority("admins")
                 //所有的请求都必须认证

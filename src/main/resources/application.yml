@@ -18,3 +18,14 @@ spring:
 
 mybatis-plus:
   mapper-locations: classpath*:mapper/**/*Mapper.xml
+
+
+#上传文件到文件服务器的配置
+ftp-centos:
+  #IP
+  host: 106.15.106.108
+  #端口
+  port: 22
+  user: root
+  password: zsw0828zsw
+  basePath: /usr/local/tomcat/tomcat9-8082/webapps/file
