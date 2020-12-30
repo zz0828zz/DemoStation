@@ -16,7 +16,7 @@ import javax.annotation.Resource;
 @Component
 public class UserUtils {
 
-
+    //获取当前登录用户
     public static String getUser() {
         String principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
 
