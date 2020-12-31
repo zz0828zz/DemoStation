@@ -30,7 +30,7 @@ public class SysUser implements Serializable {
     private String phone;
 
     @ApiModelProperty(value = "用户qq")
-    private Long qq;
+    private String qq;
 
     @ApiModelProperty(value = "代理人账号")
     private String agentName;

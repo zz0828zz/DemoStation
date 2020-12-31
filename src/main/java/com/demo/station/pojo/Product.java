@@ -32,7 +32,7 @@ public class Product implements Serializable {
     private String skipUrl;
 
     @ApiModelProperty(value = "产品说明")
-    private String explain;
+    private String productExplain;
 
     @ApiModelProperty(value = "产品类型    与类型表关联")
     private Long productTypeId;

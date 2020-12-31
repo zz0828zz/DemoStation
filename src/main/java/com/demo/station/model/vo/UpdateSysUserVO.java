@@ -23,7 +23,7 @@ public class UpdateSysUserVO {
     private String phone;
 
     @ApiModelProperty(value = "用户qq")
-    private Long qq;
+    private String qq;
 
     @ApiModelProperty(value = "用户手机号")
     private String agentName;

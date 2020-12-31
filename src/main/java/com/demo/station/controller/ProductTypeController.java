@@ -34,13 +34,13 @@ public class ProductTypeController {
 
     @PostMapping(value = "/addProductType")
     @ApiOperation("添加产品类型")
-    @ApiImplicitParam(name = "name", value = "产品名称", required = true)
+    @ApiImplicitParam(name = "name", value = "产品类型名称", required = true)
     public Result addProductType(String name) {
         QueryWrapper<ProductType> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("name", name);
         int count = productTypeService.count(queryWrapper);
         if (count > 0) {
-            return Result.fail("产品名称已存在");
+            return Result.fail("产品类型名称已存在");
         } else {
             ProductType productType = new ProductType();
             productType.setName(name);
@@ -56,7 +56,7 @@ public class ProductTypeController {
         queryWrapper.eq("name", productType.getName());
         int count = productTypeService.count(queryWrapper);
         if (count > 0) {
-            return Result.fail("产品名称已存在");
+            return Result.fail("产品类型名称已存在");
         } else {
             productTypeService.updateById(productType);
             return Result.success("修改成功");
@@ -65,7 +65,7 @@ public class ProductTypeController {
 
     @PostMapping(value = "/deleteProductType")
     @ApiOperation("删除产品类型")
-    @ApiImplicitParam(name = "id", value = "产品id", required = true)
+    @ApiImplicitParam(name = "id", value = "产品类型id", required = true)
     public Result deleteProductType(Long id) {
         productTypeService.removeById(id);
         return Result.success("删除成功");
