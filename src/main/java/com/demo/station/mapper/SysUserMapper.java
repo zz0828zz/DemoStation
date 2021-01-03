@@ -13,4 +13,6 @@ import java.util.List;
 public interface SysUserMapper extends BaseMapper<SysUser> {
 
     List<SysUserInfoDto> getSysUserInfoDto(@Param("page") SelectSysUserPage page);
+
+    int getSysUserCount(@Param("page") SelectSysUserPage page);
 }

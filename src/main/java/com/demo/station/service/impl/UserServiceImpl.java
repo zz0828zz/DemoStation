@@ -105,4 +105,10 @@ public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impleme
 
         return  sysUserInfoDto;
     }
+
+    @Override
+    public int getSysUserCount(SelectSysUserPage page) {
+        int count = userMapper.getSysUserCount(page);
+        return count;
+    }
 }

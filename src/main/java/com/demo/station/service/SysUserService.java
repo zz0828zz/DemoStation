@@ -7,6 +7,7 @@ import com.demo.station.model.vo.SaveSysUserVO;
 import com.demo.station.model.vo.SelectSysUserPage;
 import com.demo.station.model.vo.UpdateSysUserVO;
 import com.demo.station.pojo.SysUser;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
@@ -16,4 +17,5 @@ public interface SysUserService extends IService<SysUser> {
     boolean updateUser( UpdateSysUserVO sysUserVO);
 
     List<SysUserInfoDto> getSysUserInfoDto(SelectSysUserPage page);
+    int getSysUserCount(SelectSysUserPage page);
 }
