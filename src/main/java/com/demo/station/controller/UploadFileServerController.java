@@ -25,7 +25,7 @@ public class UploadFileServerController {
         try {
             byte[] bytes = file.getBytes();
             FTPUtil.sshSftp(bytes, file.getOriginalFilename());
-            return Result.success("http://106.15.106.108:8082/file/"+file.getOriginalFilename());
+            return Result.data("http://106.15.106.108:8082/file/"+file.getOriginalFilename());
         } catch (Exception e) {
             e.printStackTrace();
         }
