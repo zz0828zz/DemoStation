@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.demo.station.config.jwt.UserUtils;
 import com.demo.station.model.dto.ProductDto;
-import com.demo.station.model.dto.SysUserDto;
 import com.demo.station.model.vo.ProductPageVO;
 import com.demo.station.model.vo.ProductPriceVO;
 import com.demo.station.model.vo.SaveOrUpdateProductVO;
@@ -19,13 +18,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**

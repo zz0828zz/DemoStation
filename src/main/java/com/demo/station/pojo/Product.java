@@ -28,8 +28,20 @@ public class Product implements Serializable {
     @ApiModelProperty(value = "图片地址")
     private String imageUrl;
 
-    @ApiModelProperty(value = "跳转地址")
-    private String skipUrl;
+    @ApiModelProperty(value = "产品演示地址")
+    private String productDemoStationUrl;
+    @ApiModelProperty(value = "产品演示登录名称")
+    private String productDemoStationName;
+    @ApiModelProperty(value = "产品演示登陆密码")
+    private String productDemoStationPwd;
+    @ApiModelProperty(value = "产品后台地址")
+    private String productAdminUrl;
+    @ApiModelProperty(value = "产品后台登录名称")
+    private String productAdminName;
+    @ApiModelProperty(value = "产品后台登陆密码")
+    private String productAdminPwd;
+
+
 
     @ApiModelProperty(value = "产品说明")
     private String productExplain;
