@@ -75,15 +75,7 @@ public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impleme
                 sysUser.setUserName(sysUserVO.getUserName());
             }
         }
-        if (StringUtils.isNotEmpty(sysUserVO.getUserPassword())){
-            sysUser.setUserPassword(new BCryptPasswordEncoder().encode(sysUserVO.getUserPassword()));
-        }
-        if (StringUtils.isNotEmpty(sysUserVO.getPhone())){
-            sysUser.setPhone(sysUserVO.getPhone());
-        }
-        if (sysUserVO.getQq()!=null){
-            sysUser.setQq(sysUserVO.getQq());
-        }
+        sysUser = CopyUtils.copyPojo(sysUserVO, SysUser.class);
 
         userMapper.updateById(sysUser);
 

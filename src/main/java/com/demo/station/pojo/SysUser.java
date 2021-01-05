@@ -35,4 +35,7 @@ public class SysUser implements Serializable {
     @ApiModelProperty(value = "代理人账号")
     private String agentName;
 
+    @ApiModelProperty(value = "备注")
+    private String note;
+
 }

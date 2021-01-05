@@ -32,6 +32,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper,Product> imple
         try {
             Product product = CopyUtils.copyPojo(productVO, Product.class);
             product.setCreateTime(new Date());
+            this.saveOrUpdate(product);
             if (productVO.getPrice()!=null){
                 String sysUserName = UserUtils.getUser(); //获取当前用户账号
                 Long productId = product.getId(); //产品id
@@ -40,12 +41,15 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper,Product> imple
                 priceQueryWrapper.eq("product_id",productId)
                         .eq("user_name",sysUserName);
                 ProductPrice productPrice = productPriceService.getOne(priceQueryWrapper);
+                if (productPrice==null){
+                    productPrice = new ProductPrice();
+                }
                 productPrice.setUserName(sysUserName);
                 productPrice.setProductId(productId);
                 productPrice.setPrice(productVO.getPrice());
                 productPriceService.saveOrUpdate(productPrice);
             }
-           return this.saveOrUpdate(product);
+           return true;
         } catch (Exception e) {
             e.printStackTrace();
         }

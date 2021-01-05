@@ -27,6 +27,11 @@ public class SaveSysUserVO {
     @ApiModelProperty(value = "代理人账号")
     private String agentName;
 
+    @ApiModelProperty(value = "备注")
+    private String note;
+
     @ApiModelProperty(value = "用户角色id 1：admin(管理员)  2：stair(一级代理)  3：second（二级代理）  4：user（普通用户） 传参1234",required = true)
     private Long role;
+
+
 }

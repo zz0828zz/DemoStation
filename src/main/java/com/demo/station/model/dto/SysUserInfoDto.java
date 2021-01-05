@@ -28,9 +28,9 @@ public class SysUserInfoDto implements Serializable {
    @ApiModelProperty(value = "用户qq")
    private Long qq;
 
-   @ApiModelProperty(value = "用户手机号")
+   @ApiModelProperty(value = "用户上级账号")
    private String agentName;
 
-   @ApiModelProperty(value = "用户权限")
+   @ApiModelProperty(value = "用户角色")
    private String roleName;
 }

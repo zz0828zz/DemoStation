@@ -1,21 +1,21 @@
 package com.demo.station.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.demo.station.config.jwt.UserUtils;
 import com.demo.station.model.dto.ProductDto;
 import com.demo.station.model.dto.SysUserInfoDto;
 import com.demo.station.model.vo.SaveSysUserVO;
 import com.demo.station.model.vo.SelectSysUserPage;
 import com.demo.station.model.vo.UpdateSysUserVO;
-import com.demo.station.pojo.SysRole;
-import com.demo.station.pojo.SysUserRole;
+import com.demo.station.pojo.*;
+import com.demo.station.service.ProductPriceService;
 import com.demo.station.service.SysRoleService;
 import com.demo.station.service.SysUserRoleService;
 import com.demo.station.utils.CopyUtils;
 import com.demo.station.utils.PageResult;
 import com.demo.station.utils.Result;
 import com.demo.station.model.dto.SysUserDto;
-import com.demo.station.pojo.SysUser;
 import com.demo.station.service.SysUserService;
 import com.demo.station.utils.ResultCode;
 import io.swagger.annotations.Api;
@@ -23,6 +23,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +44,8 @@ public class SysUserController {
     private SysRoleService sysRoleService;
     @Autowired
     private SysUserRoleService sysUserRoleService;
+    @Autowired
+    private ProductPriceService productPriceService;
 
     @GetMapping(value = "/getUser")
     @ApiOperation("获取当前登录用户信息")
@@ -82,15 +85,20 @@ public class SysUserController {
     }
 
 
-    @PostMapping(value = "/getSysUserInfoDto")
-    @ApiOperation("获取所有用户，分页")
-    public PageResult<SysUserInfoDto> getSysUserInfoDto(@RequestBody SelectSysUserPage page) {
-        page.setFirstIndex((page.getCurrent()-1)*page.getSize());
-        String sysUserName = UserUtils.getUser(); //获取当前用户账号
+    @GetMapping(value = "/getSysUserInfoDto")
+    @ApiOperation("获取所有下属用户，分页")
+    public PageResult<SysUserInfoDto> getSysUserInfoDto(SelectSysUserPage page) {
+        page.setFirstIndex((page.getCurrent() - 1) * page.getSize());
+        String sysUserName = page.getSysUserName();
+
+        if (sysUserName == null) {
+            sysUserName = UserUtils.getUser(); //获取当前用户账号
+        }
+
         page.setSysUserName(sysUserName);
         List<SysUserInfoDto> sysUserInfoDtoList = userService.getSysUserInfoDto(page);
         PageResult pageResult = new PageResult();
-        if (CollectionUtils.isEmpty(sysUserInfoDtoList)){
+        if (CollectionUtils.isEmpty(sysUserInfoDtoList)) {
             return pageResult;
         }
 
@@ -139,10 +147,15 @@ public class SysUserController {
     @PostMapping(value = "/delUser")
     @ApiOperation("根据用户id删除用户")
     @ApiImplicitParam(name = "id", value = "用户id", required = true)
+    @Transactional
     public Result delUser(Long id) {
+        SysUser sysUser = userService.getById(id);
+        QueryWrapper<ProductPrice> productPriceQuery = new QueryWrapper<>();
+        productPriceQuery.eq("user_name", sysUser.getUserName());
+        productPriceService.remove(productPriceQuery);
         if (userService.removeById(id)) {
             QueryWrapper<SysUserRole> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("user_id",id);
+            queryWrapper.eq("user_id", id);
             sysUserRoleService.remove(queryWrapper);
             return Result.success("删除成功");
         } else {
@@ -157,10 +170,10 @@ public class SysUserController {
     public Result getQqByUserId(Long id) {
         //先获取当前用户信息
         SysUser sysUser = userService.getById(id);
-        if (!StringUtils.isEmpty(sysUser.getAgentName())){
+        if (!StringUtils.isEmpty(sysUser.getAgentName())) {
             //再根据获取到的用户信息  找到代理的账号
             QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("user_name",sysUser.getAgentName());
+            queryWrapper.eq("user_name", sysUser.getAgentName());
             SysUser userServiceOne = userService.getOne(queryWrapper);
 
             //最后将代理的qq返回给首页
@@ -168,6 +181,8 @@ public class SysUserController {
         }
         return Result.data(null);
     }
+
+
 
 
 }

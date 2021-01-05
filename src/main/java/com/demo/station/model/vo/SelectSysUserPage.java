@@ -15,8 +15,7 @@ public class SelectSysUserPage extends PageInfo {
     @JsonIgnore
     private Integer firstIndex;
 
-    //@ApiModelProperty(value = "用户账号")
-    @JsonIgnore
+    @ApiModelProperty(value = "用户账号")
     private String sysUserName;
 
 }
