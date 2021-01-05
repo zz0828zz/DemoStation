@@ -1,4 +1,4 @@
-package com.demo.station.pojo;
+package com.demo.station.model.vo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -15,9 +15,8 @@ import java.util.Date;
  * @Author lipb
  **/
 @Data
-@TableName("product")
-@ApiModel("产品对象")
-public class Product implements Serializable {
+@ApiModel
+public class SaveOrUpdateProductVO implements Serializable {
     @ApiModelProperty(value = "主键")
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
@@ -37,7 +36,8 @@ public class Product implements Serializable {
     @ApiModelProperty(value = "产品类型    与类型表关联")
     private Long productTypeId;
 
-    @ApiModelProperty(value = "创建时间")
-    private Date createTime;
+    @ApiModelProperty(value = "产品价格")
+    private BigDecimal price;
+
 
 }

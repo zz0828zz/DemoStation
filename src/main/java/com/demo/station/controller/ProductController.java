@@ -8,6 +8,8 @@ import com.demo.station.config.jwt.UserUtils;
 import com.demo.station.model.dto.ProductDto;
 import com.demo.station.model.dto.SysUserDto;
 import com.demo.station.model.vo.ProductPageVO;
+import com.demo.station.model.vo.ProductPriceVO;
+import com.demo.station.model.vo.SaveOrUpdateProductVO;
 import com.demo.station.pojo.*;
 import com.demo.station.service.*;
 import com.demo.station.utils.CopyUtils;
@@ -19,6 +21,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,18 +44,20 @@ public class ProductController {
     private SysUserRoleService sysUserRoleService;
     @Autowired
     private ProductTypeService productTypeService;
+    @Autowired
+    private ProductPriceService productPriceService;
 
 
-    //根据用户账号获取对应的角色名
-    public String getRoleName(SysUser sysUser) {
-
-        QueryWrapper<SysUserRole> sysUserRoleQuery = new QueryWrapper<>();
-        sysUserRoleQuery.eq("user_id", sysUser.getId());
-        SysUserRole sysUserRole = sysUserRoleService.getOne(sysUserRoleQuery);
-        SysRole sysRole = sysRoleService.getById(sysUserRole.getRoleId());
-        String roleName = sysRole.getRoleName();
-        return roleName;
-    }
+//    //根据用户账号获取对应的角色名
+//    public String getRoleName(SysUser sysUser) {
+//
+//        QueryWrapper<SysUserRole> sysUserRoleQuery = new QueryWrapper<>();
+//        sysUserRoleQuery.eq("user_id", sysUser.getId());
+//        SysUserRole sysUserRole = sysUserRoleService.getOne(sysUserRoleQuery);
+//        SysRole sysRole = sysRoleService.getById(sysUserRole.getRoleId());
+//        String roleName = sysRole.getRoleName();
+//        return roleName;
+//    }
 
     @GetMapping("/page")
     @ApiOperation("产品分页")
@@ -75,7 +80,7 @@ public class ProductController {
         querySysUser.eq("user_name", sysUserName);
         SysUser sysUser = userService.getOne(querySysUser);
 
-        String roleName = getRoleName(sysUser);
+
         List<Product> records = productIPage.getRecords();
 
         //封装page类
@@ -85,27 +90,25 @@ public class ProductController {
         List<ProductDto> list = new ArrayList<>();
         for (Product record : records) {
             ProductDto productDto = CopyUtils.copyPojo(record, ProductDto.class);
-            //不同的角色返回不同的价格
-            if (roleName.equals("admin")) {
-                productDto.setFloorPrice(record.getAdminPrice());   //底价 == 管理员设置的价格
-                productDto.setSellingPrice(record.getAdminPrice());   //售价 == 管理员设置的价格
-            } else if (roleName.equals("stair")) {
-                productDto.setFloorPrice(record.getAdminPrice());   //底价 == 管理员设置的价格
-                productDto.setSellingPrice(record.getStairPrice());   //售价 == 一级代理设置的价格
-            } else if (roleName.equals("second")) {
-                productDto.setFloorPrice(record.getStairPrice());   //底价 == 一级代理设置的价格
-                productDto.setSellingPrice(record.getSecondPrice());   //售价 == 二级代理设置的价格
-            } else {  //否则为用户角色
-                //需要判断改用户是属于哪个代理下的    然后显示对应的售价
-                QueryWrapper<SysUser> queryUser = new QueryWrapper<>();
-                queryUser.eq("user_name", sysUser.getAgentName());
-                SysUser user = userService.getOne(queryUser);
-                String roleName1 = getRoleName(user);
-                if (roleName1.equals("stair")) {
-                    productDto.setSellingPrice(record.getStairPrice());   //售价 == 一级代理设置的价格
-                } else if (roleName1.equals("second")) {
-                    productDto.setSellingPrice(record.getSecondPrice());   //售价 == 二级代理设置的价格
-                }
+            //根据产品 id 和  当前登录用户和上级用户获取对应的低价和售价
+            Long id = productDto.getId(); //产品id
+            String agentName = sysUser.getAgentName();  //上级用户的账号
+
+            QueryWrapper<ProductPrice> priceQueryWrapper = new QueryWrapper<>();
+            priceQueryWrapper.eq("product_id",id)
+                    .eq("user_name",sysUserName);
+            ProductPrice productPrice = productPriceService.getOne(priceQueryWrapper);
+            BigDecimal sellingPrice = productPrice.getPrice(); //售价
+            BigDecimal  floorPrice = null;
+
+            if (null == agentName){ //如果上级用户账号为空  则说明此人是管理员  管理员的低价和售价一致
+                floorPrice = sellingPrice;
+            }else{
+                QueryWrapper<ProductPrice> priceQueryWrapper1 = new QueryWrapper<>();
+                priceQueryWrapper.eq("product_id",id)
+                        .eq("user_name",agentName);
+                ProductPrice productPrice1 = productPriceService.getOne(priceQueryWrapper1);
+                floorPrice = productPrice1.getPrice();
             }
 
             //将产品类型返回给前台
@@ -124,18 +127,34 @@ public class ProductController {
     }
 
     @PostMapping("/saveOrUpdateProduct")
-    @ApiOperation("新增或修改产品")
-    public Result saveOrUpdateProduct(@RequestBody Product product) {
-        try {
-            product.setCreateTime(new Date());
-            if (productService.saveOrUpdate(product)) {
-                return Result.success("操作成功");
-            } else {
-                return Result.fail("操作失败");
-            }
-        } catch (Exception e) {
+    @ApiOperation("管理员新增或修改产品")
+    public Result saveOrUpdateProduct(@RequestBody SaveOrUpdateProductVO productVO) {
+        if (productService.saveOrUpdateProduct(productVO)) {
+            return Result.success("操作成功");
+        }
+        return Result.fail("操作失败");
+    }
+
+    @PostMapping("/saveOrUpdateProductPrice")
+    @ApiOperation("代理新增或修改产品价格")
+    public Result saveOrUpdateProductPrice(@RequestBody ProductPriceVO productPriceVO) {
+        try{
+            String sysUserName = UserUtils.getUser(); //获取当前用户账号
+            Long productId = productPriceVO.getProductId(); //产品id
+            //根据用户账号和产品id   判断产品价格是否存在      如果存在则更新不存在则新增
+            QueryWrapper<ProductPrice> priceQueryWrapper = new QueryWrapper<>();
+            priceQueryWrapper.eq("product_id",productId)
+                    .eq("user_name",sysUserName);
+            ProductPrice productPrice = productPriceService.getOne(priceQueryWrapper);
+            productPrice.setUserName(sysUserName);
+            productPrice.setProductId(productId);
+            productPrice.setPrice(productPriceVO.getPrice());
+            productPriceService.saveOrUpdate(productPrice);
+            return Result.success("操作成功");
+        }catch (Exception e){
             e.printStackTrace();
         }
+
         return Result.fail("操作失败");
     }
 
@@ -155,5 +174,8 @@ public class ProductController {
         }
         return Result.fail("删除失败");
     }
+
+
+
 
 }
