@@ -198,7 +198,7 @@ public class ProductController {
      */
     @GetMapping("/getProductInfoByUserName")
     @ApiOperation("根据用户账号查询该账号的产品")
-    @ApiImplicitParam(name = "name", value = "用户账号", required = true)
+    @ApiImplicitParam(name = "userName", value = "用户账号", required = true)
     public Result getProductInfoByUserName(String userName) {
 
         //一、查询出该账号所有的产品价格信息
