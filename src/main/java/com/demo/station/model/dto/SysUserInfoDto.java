@@ -34,6 +34,9 @@ public class SysUserInfoDto implements Serializable {
    @ApiModelProperty(value = "用户角色")
    private String roleName;
 
+   @ApiModelProperty(value = "用户角色说明")
+   private String description;
+
    @ApiModelProperty(value = "备注")
    private String note;
 }

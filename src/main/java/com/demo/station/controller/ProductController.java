@@ -114,6 +114,38 @@ public class ProductController {
                 ProductPrice productPrice1 = productPriceService.getOne(priceQueryWrapper1);
                 if (productPrice1 != null) {
                     floorPrice = productPrice1.getPrice();
+                }else{
+                    //如果上级的售价为空  则找上级的上级的售价
+                    QueryWrapper<SysUser> querySysUser1 = new QueryWrapper<>();
+                    querySysUser1.eq("user_name", agentName);
+                    SysUser sysUser1 = userService.getOne(querySysUser1);
+                    if (sysUser1!=null){
+                        //上级的上级账号不为空  则底价为上级的售价
+                        QueryWrapper<ProductPrice> priceQueryWrapper2 = new QueryWrapper<>();
+                        priceQueryWrapper2.eq("product_id", id)
+                                .eq("user_name", sysUser1.getAgentName());
+                        ProductPrice productPrice2 = productPriceService.getOne(priceQueryWrapper2);
+                        if (productPrice2 != null) {
+                            floorPrice = productPrice2.getPrice();
+                        }else{
+                            //如果上级的上级的售价为空  则找上级的上级的上级的售价  (最多到此)
+                            QueryWrapper<SysUser> querySysUser2 = new QueryWrapper<>();
+                            querySysUser2.eq("user_name", sysUser1.getAgentName());
+                            SysUser sysUser2 = userService.getOne(querySysUser2);
+                            if (sysUser2!=null){
+                                //上级的上级账号不为空  则底价为上级的售价
+                                QueryWrapper<ProductPrice> priceQueryWrapper3 = new QueryWrapper<>();
+                                priceQueryWrapper3.eq("product_id", id)
+                                        .eq("user_name", sysUser2.getAgentName());
+                                ProductPrice productPrice3 = productPriceService.getOne(priceQueryWrapper3);
+                                if (productPrice3 != null) {
+                                    floorPrice = productPrice3.getPrice();
+                                }
+                            }
+
+                        }
+                    }
+
                 }
             }
             //如果售价为空   底价有值   则售价为底价
@@ -123,7 +155,8 @@ public class ProductController {
             productDto.setFloorPrice(floorPrice);
 
             //将产品类型返回给前台
-            ProductType productType = productTypeService.getById(productDto.getProductTypeId());
+            Long productTypeId1 = productDto.getProductTypeId();
+            ProductType productType = productTypeService.getById(productTypeId1);
             if (productType != null) {
                 productDto.setProductTypeName(productType.getName());
             }

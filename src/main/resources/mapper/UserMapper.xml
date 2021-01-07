@@ -6,7 +6,7 @@
     <!-- 查找用户信息 -->
     <select id="getSysUserInfoDto" resultType="com.demo.station.model.dto.SysUserInfoDto">
        SELECT
-	u.id,u.user_name,u.phone,u.qq,u.agent_name,r.role_name
+	u.id,u.user_name,u.phone,u.qq,u.agent_name,r.role_name,r.description,u.note
 FROM
 	sys_user u
 	LEFT JOIN sys_user_role ur ON u.id = ur.user_id
