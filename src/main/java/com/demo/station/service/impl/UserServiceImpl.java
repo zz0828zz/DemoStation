@@ -77,6 +77,9 @@ public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impleme
         }
         sysUser = CopyUtils.copyPojo(sysUserVO, SysUser.class);
 
+        if (sysUserVO.getUserPassword()!=null){
+            sysUser.setUserPassword(new BCryptPasswordEncoder().encode(sysUser.getUserPassword()));
+        }
         userMapper.updateById(sysUser);
 
 
