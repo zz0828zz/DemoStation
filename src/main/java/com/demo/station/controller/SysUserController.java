@@ -62,6 +62,8 @@ public class SysUserController {
             sysUserDto = new SysUserDto();
             sysUserDto.setUserId(sysUser.getId());
             sysUserDto.setUserName(sysUser.getUserName());
+            sysUserDto.setPhone(sysUser.getPhone());
+            sysUserDto.setQq(sysUser.getQq());
             List<String> roles = new ArrayList<>();
             //查询用户角色
             QueryWrapper<SysUserRole> sysUserRoleQuery = new QueryWrapper<>();
