@@ -23,4 +23,10 @@ public class SysUserDto implements Serializable {
 
    @ApiModelProperty("角色")
    private List<String> roles;
+
+   @ApiModelProperty(value = "用户手机号")
+   private String phone;
+
+   @ApiModelProperty(value = "用户qq")
+   private String qq;
 }
