@@ -12,20 +12,31 @@ spring:
   datasource:
     # 注意：pom文件中，mysql版本为8以上时，驱动加 cj      url加上 时区serverTimezone=GMT%2B8
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://106.15.106.108:3306/demo_station?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://154.221.27.56:3306/demo_station?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=UTF-8
     username: root
-    password: zsw0828zsw
+    password: Aa12345678
 
 mybatis-plus:
   mapper-locations: classpath*:mapper/**/*Mapper.xml
 
-
 #上传文件到文件服务器的配置
 ftp-centos:
   #IP
-  host: 106.15.106.108
+  host: 154.221.27.56
   #端口
   port: 22
   user: root
-  password: zsw0828zsw
-  basePath: /usr/local/tomcat/tomcat9-8082/webapps/file
+  password: Aa12345678
+  basePath: /usr/local/tomcat8080/webapps/file
+
+
+
+##上传文件到文件服务器的配置
+#ftp-centos:
+#  #IP
+#  host: 106.15.106.108
+#  #端口
+#  port: 22
+#  user: root
+#  password: zsw0828zsw
+#  basePath: /usr/local/tomcat/tomcat9-8082/webapps/file
